@@ -4,12 +4,11 @@ const {
     getDepartments,
     getRoles,
     getEmployees,
-    
-    addDepartment, 
+    addDepartment,
     addRole,
     addEmployee,
     updateEmployeeRole,
-} = require('./db/queries'); // Update the path to point to the db directory
+} = require('./db/queries'); 
 
 const mainMenu = async () => {
     const { choice } = await inquirer.prompt({
@@ -74,7 +73,6 @@ const addDepartmentPrompt = async () => {
 };
 
 const addRolePrompt = async () => {
-    
     const { title, salary, department_id } = await inquirer.prompt([
         {
             name: 'title',
@@ -98,7 +96,6 @@ const addRolePrompt = async () => {
 };
 
 const addEmployeePrompt = async () => {
-    
     const { first_name, last_name, role_id, manager_id } = await inquirer.prompt([
         {
             name: 'first_name',
@@ -127,7 +124,6 @@ const addEmployeePrompt = async () => {
 };
 
 const updateEmployeeRolePrompt = async () => {
-   
     const { employee_id, new_role_id } = await inquirer.prompt([
         {
             name: 'employee_id',
