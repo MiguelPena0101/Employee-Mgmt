@@ -9,38 +9,36 @@ const pool = new Pool({
     port: process.env.DB_PORT,
 });
 
-const getDepartments = async () => {
-    const result = await pool.query('SELECT * FROM department');
-    return result.rows;
+
+const addDepartment = async (name) => {
+    const query = 'INSERT INTO department (name) VALUES ($1) RETURNING *';
+    const values = [name];
+    const result = await pool.query(query, values);
+    return result.rows[0];
 };
 
-const getRoles = async () => {
-    const query = `
-    SELECT role.id, role.title, department.name AS department, role.salary
-    FROM role
-    INNER JOIN department ON role.department_id = department.id
-    `;
-    const result = await pool.query(query);
-    return result.rows;
+
+const addRole = async (title, salary, department_id) => {
+    const query = 'INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3) RETURNING *';
+    const values = [title, salary, department_id];
+    const result = await pool.query(query, values);
+    return result.rows[0];
 };
 
-const getEmployees = async () => {
-    const query = `
-    SELECT employee.id, employee.first_name, employee.last_name, role.title AS job_title, department.name AS department, role.salary, 
-           manager.first_name AS manager_first_name, manager.last_name AS manager_last_name
-    FROM employee
-    INNER JOIN role ON employee.role_id = role.id
-    INNER JOIN department ON role.department_id = department.id
-    LEFT JOIN employee AS manager ON employee.manager_id = manager.id
-    `;
-    const result = await pool.query(query);
-    return result.rows;
-};
 
+const addEmployee = async (first_name, last_name, role_id, manager_id) => {
+    const query = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4) RETURNING *';
+    const values = [first_name, last_name, role_id, manager_id || null];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+};
 
 
 module.exports = {
     getDepartments,
     getRoles,
     getEmployees,
+    addDepartment,
+    addRole,
+    addEmployee,
 };
